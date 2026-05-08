@@ -43,7 +43,7 @@ describe('LoginPage', () => {
           <LoginPage />
         </MemoryRouter>
       );
-      
+
       expect(screen.getByText('歡迎回來')).toBeInTheDocument();
       expect(screen.getByLabelText('電子郵件')).toBeInTheDocument();
       expect(screen.getByLabelText('密碼')).toBeInTheDocument();
@@ -60,13 +60,13 @@ describe('LoginPage', () => {
           <LoginPage />
         </MemoryRouter>
       );
-      
+
       const emailInput = screen.getByLabelText('電子郵件');
       await user.type(emailInput, 'invalid-email');
-      
+
       const submitBtn = screen.getByRole('button', { name: '登入' });
       await user.click(submitBtn);
-      
+
       expect(screen.getByText('請輸入有效的 Email 格式')).toBeInTheDocument();
       const { login } = useAuth();
       expect(login).not.toHaveBeenCalled();
@@ -80,16 +80,16 @@ describe('LoginPage', () => {
           <LoginPage />
         </MemoryRouter>
       );
-      
+
       const emailInput = screen.getByLabelText('電子郵件');
       await user.type(emailInput, 'test@example.com');
-      
+
       const passwordInput = screen.getByLabelText('密碼');
       await user.type(passwordInput, 'pwd12');
-      
+
       const submitBtn = screen.getByRole('button', { name: '登入' });
       await user.click(submitBtn);
-      
+
       expect(screen.getByText('密碼必須至少 8 個字元')).toBeInTheDocument();
       const { login } = useAuth();
       expect(login).not.toHaveBeenCalled();
@@ -103,17 +103,17 @@ describe('LoginPage', () => {
           <LoginPage />
         </MemoryRouter>
       );
-      
+
       const emailInput = screen.getByLabelText('電子郵件');
       await user.type(emailInput, 'test@example.com');
-      
+
       const passwordInput = screen.getByLabelText('密碼');
       await user.type(passwordInput, '12345678');
-      
+
       const submitBtn = screen.getByRole('button', { name: '登入' });
       await user.click(submitBtn);
-      
-      expect(screen.getByText('密碼必須包含英文字母和數字')).toBeInTheDocument();
+
+      expect(screen.getByText('密碼必須包含英文字母,eitbrch和數字')).toBeInTheDocument();
       const { login } = useAuth();
       expect(login).not.toHaveBeenCalled();
     });
@@ -124,22 +124,22 @@ describe('LoginPage', () => {
       const loginMock = vi.fn().mockResolvedValue(undefined);
       setupAuth({ login: loginMock });
       const user = userEvent.setup();
-      
+
       render(
         <MemoryRouter>
           <LoginPage />
         </MemoryRouter>
       );
-      
+
       const emailInput = screen.getByLabelText('電子郵件');
       await user.type(emailInput, 'test@example.com');
-      
+
       const passwordInput = screen.getByLabelText('密碼');
       await user.type(passwordInput, 'password123');
-      
+
       const submitBtn = screen.getByRole('button', { name: '登入' });
       await user.click(submitBtn);
-      
+
       expect(loginMock).toHaveBeenCalledWith('test@example.com', 'password123');
       await waitFor(() => {
         expect(mockNavigate).toHaveBeenCalledWith('/dashboard', { replace: true });
@@ -152,22 +152,22 @@ describe('LoginPage', () => {
       });
       setupAuth({ login: loginMock });
       const user = userEvent.setup();
-      
+
       render(
         <MemoryRouter>
           <LoginPage />
         </MemoryRouter>
       );
-      
+
       const emailInput = screen.getByLabelText('電子郵件');
       await user.type(emailInput, 'test@example.com');
-      
+
       const passwordInput = screen.getByLabelText('密碼');
       await user.type(passwordInput, 'password123');
-      
+
       const submitBtn = screen.getByRole('button', { name: '登入' });
       await user.click(submitBtn);
-      
+
       await waitFor(() => {
         expect(screen.getByText('登入失敗，請稍後再試')).toBeInTheDocument();
       });
@@ -177,29 +177,29 @@ describe('LoginPage', () => {
   describe('驗證權限', () => {
     it('已登入狀態導向', () => {
       setupAuth({ isAuthenticated: true });
-      
+
       render(
         <MemoryRouter>
           <LoginPage />
         </MemoryRouter>
       );
-      
+
       expect(mockNavigate).toHaveBeenCalledWith('/dashboard', { replace: true });
     });
 
     it('認證過期提示', () => {
       const clearAuthExpiredMessageMock = vi.fn();
-      setupAuth({ 
+      setupAuth({
         authExpiredMessage: '登入已過期',
         clearAuthExpiredMessage: clearAuthExpiredMessageMock
       });
-      
+
       render(
         <MemoryRouter>
           <LoginPage />
         </MemoryRouter>
       );
-      
+
       expect(screen.getByText('登入已過期')).toBeInTheDocument();
       expect(clearAuthExpiredMessageMock).toHaveBeenCalled();
     });
