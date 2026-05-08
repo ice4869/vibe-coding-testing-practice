@@ -113,7 +113,7 @@ describe('LoginPage', () => {
       const submitBtn = screen.getByRole('button', { name: '登入' });
       await user.click(submitBtn);
 
-      expect(screen.getByText('密碼必須包含英文字母,eitbrch和數字')).toBeInTheDocument();
+      expect(screen.getByText('密碼必須包含英文字母和數字')).toBeInTheDocument();
       const { login } = useAuth();
       expect(login).not.toHaveBeenCalled();
     });
